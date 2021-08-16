@@ -6,19 +6,19 @@
     "dev": "parcel index.html",
     "dev-local": "LOCAL_DATA=true parcel index.html",
     "build": "parcel build index.html",
-    "predeploy": "rm -rf dist && parcel build index.html src/index.js styles/style.scss --public-url https://pizza-to-the-polls.github.io/data-maps",
+    "predeploy": "rm -rf dist && parcel build index.html src/index.js styles/style.scss --public-url https://dataforprogress.github.io/data-maps",
     "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/noahmanger/data-maps.git"
+    "url": "git+https://github.com/dataforprogress/data-maps.git"
   },
   "author": "Noah Manger",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/noahmanger/data-maps/issues"
+    "url": "https://github.com/dataforprogress/data-maps/issues"
   },
-  "homepage": "https://github.com/noahmanger/data-maps#readme",
+  "homepage": "https://github.com/dataforprogress/data-maps#readme",
   "devDependencies": {
     "eslint": "^5.15.3",
     "eslint-config-airbnb-base": "^13.1.0",
