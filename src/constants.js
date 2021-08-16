@@ -1,4 +1,5 @@
-export const sheetsBaseUrl = "https://spreadsheets.google.com/v4/spreadsheets";
+export const sheetsBaseUrl = "https://sheets.googleapis.com/v4/spreadsheets";
+export const API_KEY = "AIzaSyAlyETqW8C8tW0wvooXJasGFv9a-_OvlW0"
 export const excludedKeys = [
   "id",
   "fips",

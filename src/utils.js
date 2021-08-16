@@ -1,9 +1,9 @@
-import { sheetsBaseUrl, rootURL, stateLabels } from "./constants";
+import { sheetsBaseUrl, rootURL, stateLabels, API_KEY } from "./constants";
 
 export const buildSheetsURL = (tab, sheetsID) =>
   process.env.LOCAL_DATA === "true"
     ? `${rootURL}/sheets/${sheetsID}/${tab}.json`
-    : `${sheetsBaseUrl}/${sheetsID}/values/${tab}`;
+    : `${sheetsBaseUrl}/${sheetsID}/values/${tab}?key=${API_KEY}`;
 
 export const buildMapURL = map => `${rootURL}${map}.json`;
 
