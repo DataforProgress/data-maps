@@ -1,4 +1,4 @@
-export const sheetsBaseUrl = "https://spreadsheets.google.com/feeds/list";
+export const sheetsBaseUrl = "https://spreadsheets.google.com/v4/spreadsheets";
 export const excludedKeys = [
   "id",
   "fips",
@@ -14,7 +14,7 @@ export const prefix = "dfp-map__";
 export const rootURL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:1234/"
-    : "https://pizza-to-the-polls.github.io/data-maps/";
+    : "https://dataforprogress.github.io/data-maps/";
 export const legendWidth = 320;
 export const legendHeight = 40;
 export const nonFilters = [

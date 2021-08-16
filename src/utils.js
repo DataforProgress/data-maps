@@ -156,9 +156,9 @@ export const buildEmbedCode = shareState => {
   const embedScript = [
     '<script>!function(d,w){if(!w.dfpMap){w.dfpMap="init";',
     'var i=d.createElement("script"),s=d.createElement("link");',
-    'i.setAttribute("src","https://pizza-to-the-polls.github.io',
+    'i.setAttribute("src","https://dataforprogress.github.io',
     '/data-maps/src/index.js"),s.setAttribute("href",',
-    '"https://pizza-to-the-polls.github.io/data-maps/styles/style.css"),',
+    '"https://dataforprogress.github.io/data-maps/styles/style.css"),',
     's.setAttribute("rel","stylesheet"), s.setAttribute("type","text/css")',
     ',d.head.appendChild(i),d.head.appendChild(s)}}(document,window);</script>'
   ].join('')
