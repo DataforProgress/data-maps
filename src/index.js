@@ -146,7 +146,7 @@ const initDataMap = container => {
   const loadedMaps = { [startMap]: true };
 
   // Get the Settings tab which lists all the datasets (other tabs) we'll later get
-  json(buildSheetsURL(1, sheetKey)).then(response => {
+  json(buildSheetsURL("1. Settings", sheetKey)).then(response => {
     response.feed.entry.forEach(entry => {
       try {
         const dataset = parseRow(entry.content.$t);

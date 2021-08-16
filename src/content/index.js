@@ -23,7 +23,7 @@ export const showContent = issueKey => {
 };
 
 export const getContent = (currentIssueKey, sheetsID) => {
-  json(buildSheetsURL(2, sheetsID)).then(response => {
+  json(buildSheetsURL("2. Content", sheetsID)).then(response => {
     response.feed.entry.forEach(entry => {
       select(`.${prefix}content`)
         .append("section")
