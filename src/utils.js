@@ -1,5 +1,20 @@
 import { sheetsBaseUrl, rootURL, stateLabels, API_KEY } from "./constants";
 
+import { csvParse } from "d3"
+
+
+export const parseArr = (data) => {
+  let parsed = csvParse(data.values.map(a => a.join(',')).join('\n'))
+  return parsed.map(row => relabelKeys(row))
+}
+
+
+export const getSheetNames = (sheetsID) => {
+  return fetch(`${sheetsBaseUrl}/${sheetsID}?key=${API_KEY}&fields=sheets.properties.title`)
+      .then(resp => resp.json())
+      .then(resp => resp.sheets)
+}
+
 export const buildSheetsURL = (tab, sheetsID) =>
   process.env.LOCAL_DATA === "true"
     ? `${rootURL}/sheets/${sheetsID}/${tab}.json`
@@ -32,9 +47,13 @@ export const formatAsPercentage = value => {
 
 export const parseStats = data => {
   const cleanStats = [];
-  data.feed.entry.forEach(d => {
-    const row = parseRow(d.content.$t);
-    row.fips = fipsOrString(d.title.$t); // Need to add the first column manually
+  console.log('hmmm', data)
+  data.forEach(d => {
+    const row = d
+    row.label = row["Label"]
+    row.fips = fipsOrString(d.Code); // Need to add the first column manually
+    delete row["Code"]
+    delete row["Label"]
     cleanStats.push(row);
   });
   return cleanStats;
@@ -165,4 +184,31 @@ export const buildEmbedCode = shareState => {
 
 
   return `${embedDiv.outerHTML}${embedScript}`
+}
+
+
+const RENAMED_KEYS = {
+  "Buckets": "buckets",
+  "Dataset": "dataset",
+  "Issue": "issue",
+  "Issue label": "issuelabel",
+  "Legend label": "legendLabel",
+  "Max": "max",
+  "Min": "min",
+  "Neutral Midpoint": "neutralMidpoint",
+  "Scale": "scale",
+  "Tab": "tab",
+  "Title": "title",
+  "buckets": "buckets",
+  "issueKey": "issuekey",
+  "scaleType": "scaleType",
+  "Content": "content"
+}
+export const relabelKeys = (obj) => {
+  return Object.keys(obj).reduce((new_obj, key) => {
+    return { 
+      ...new_obj,
+      [RENAMED_KEYS[key] ? RENAMED_KEYS[key] : key]: obj[key],
+    }
+  }, {})
 }

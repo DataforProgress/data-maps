@@ -1,10 +1,10 @@
-import { select, selectAll, json } from "d3";
+import { select, selectAll } from "d3";
 import marked from "marked";
 import fs from "fs";
 import { legendWidth, legendHeight, prefix } from "../constants";
 import createShareContent from "./share";
 
-import { buildSheetsURL } from "../utils";
+import { buildSheetsURL, parseArr } from "../utils";
 
 let vis;
 
@@ -22,14 +22,18 @@ export const showContent = issueKey => {
   select(`[data-issue=${issueKey}]`).style("display", "block");
 };
 
-export const getContent = (currentIssueKey, sheetsID) => {
-  json(buildSheetsURL("2. Content", sheetsID)).then(response => {
-    response.feed.entry.forEach(entry => {
+export const getContent = (currentIssueKey, sheetsID, sheetNames) => {
+  fetch(buildSheetsURL(sheetNames[1].properties.title, sheetsID))
+  .then(resp => resp.json())
+  // .then(resp => csv(resp.values.join("\n")))
+  .then(response => {
+    let data = parseArr(response)
+    data.forEach(entry => {
       select(`.${prefix}content`)
         .append("section")
-        .attr("data-issue", entry.title.$t)
+        .attr("data-issue", entry.title)
         .style("display", "none")
-        .html(marked(entry.content.$t.split("content: ")[1]));
+        .html(marked(entry.content || ""));
     });
     showContent(currentIssueKey);
   });

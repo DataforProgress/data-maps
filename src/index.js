@@ -1,7 +1,7 @@
 import { select, json } from "d3";
 
 import { prefix, DEFAULT_SCALE, DEFAULT_BUCKETS } from "./constants";
-import { getMapConfig, buildMapURL, buildSheetsURL, parseRow, floatOrNull } from "./utils";
+import { getMapConfig, buildMapURL, buildSheetsURL, parseArr, floatOrNull, getSheetNames } from "./utils";
 import { getContent, showContent, initDom, toggleLoading } from "./content";
 import { removeDetails, initDetails } from "./map/details";
 import { initTooltip, removeTooltip } from "./map/tooltip";
@@ -12,6 +12,7 @@ let currentDataset;
 let mapSelectorContainer;
 let title;
 let sheetKey;
+let sheetNames = {};
 
 const datasets = {};
 const sheets = {};
@@ -24,11 +25,14 @@ const build = (tab, options, attempts) => {
   options = options || {};
   options.mapKey = mapKeys[tab];
   options.sheetKey = sheetKey;
-
   toggleLoading(true);
   if (!sheets[tab])
-    return json(buildSheetsURL(tab, sheetKey)).then(raw => {
-      sheets[tab] = raw;
+    return fetch(buildSheetsURL(sheetNames[tab - 1].properties.title, sheetKey))
+    .then(resp => resp.json())
+    // .then(resp => csv(resp.values.join("\n")))
+    .then(response => {
+      let data = parseArr(response)
+      sheets[tab] = data;
       build(tab, options);
     });
 
@@ -73,6 +77,7 @@ const addStateAndDistrictToggle = (container, dataset, selected) => {
       .append("select")
       .attr("name", "toggle")
       .on("change", () => {
+        console.log(dataset)
         const selected = dataset[toggle.property("value")];
         currentDataset = selected;
         updateClickInstructions(toggle.property("value"));
@@ -123,13 +128,9 @@ const addMapSelector = (container, data, firstKey) => {
   mapSelector.select(`option[value=${firstKey}]`).attr("selected", true);
 };
 
-const initDataMap = container => {
-  sheetKey = container ? container.getAttribute("data-spreadsheet-key") : null;
 
-  if (!sheetKey) {
-    console.error("Cannot init maps without a key - set the data-spreadsheet-key attribute");
-    return;
-  }
+const initDataMap = (container) => {
+
 
   initDom(container);
   initMap(container);
@@ -146,11 +147,14 @@ const initDataMap = container => {
   const loadedMaps = { [startMap]: true };
 
   // Get the Settings tab which lists all the datasets (other tabs) we'll later get
-  json(buildSheetsURL("1. Settings", sheetKey)).then(response => {
-    response.feed.entry.forEach(entry => {
+  fetch(buildSheetsURL(sheetNames[0].properties.title, sheetKey))
+  .then(resp => resp.json())
+  // .then(resp => csv(resp.values.join("\n")))
+  .then(response => {
+    let data = parseArr(response)
+    data.forEach(dataset => {
       try {
-        const dataset = parseRow(entry.content.$t);
-        const key = entry.title.$t;
+        const key = dataset.title;
         const mapKey = dataset.dataset.replace(/\s/g, "-").toLowerCase();
 
         if (!loadedMaps[mapKey]) {
@@ -177,13 +181,14 @@ const initDataMap = container => {
           if (dataset.max) datasets[key].max = floatOrNull(dataset.max);
           if (dataset.min) datasets[key].min = floatOrNull(dataset.min);
         }
+        console.log(datasets, 'asldkfj')
         datasets[key][mapKey] = dataset;
         datasets[key].maps.push(mapKey);
         datasets[key].tabs.push(dataset.tab);
         mapKeys[dataset.tab] = mapKey;
       } catch (error) {
         console.error(
-          `Could not import settings row ${entry.title.$t} ${entry.content.$t}, error:`
+          `Could not import settings row ${dataset.title} ${dataset.content}, error:`
         );
         console.error(error);
       }
@@ -215,8 +220,24 @@ const initDataMap = container => {
 
     build(firstTab, { firstFilter, firstFeature });
     updateClickInstructions(firstMap);
-    getContent(currentDataset.issuekey, sheetKey);
+    getContent(currentDataset.issuekey, sheetKey, sheetNames);
   });
 };
 
-initDataMap(document.querySelector(".data-progress-maps"));
+
+const init = (container) => {
+  sheetKey = container ? container.getAttribute("data-spreadsheet-key") : null;
+
+  if (!sheetKey) {
+    console.error("Cannot init maps without a key - set the data-spreadsheet-key attribute");
+    return;
+  }
+  
+  getSheetNames(sheetKey).then(results => {
+    sheetNames = results;
+    initDataMap(container)
+  })
+}
+
+
+init(document.querySelector(".data-progress-maps"));

@@ -32,6 +32,7 @@ const createTable = data => {
   tableContainer.selectAll("*").remove();
   const table = tableContainer.append("table");
 
+  console.log(data)
   let rows = createRows(table, data, keys);
 
   const tableHeaders = table
