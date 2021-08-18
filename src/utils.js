@@ -41,19 +41,22 @@ export const formatAsPercentage = value => {
   if (isNaN(value)) {
     return value;
   }
-  const percentage = value <= 1 ? value * 100 : value;
+  let percentage = value <= 1 ? value * 100 : value;
+
+  if(!percentage.toFixed) {
+    return percentage
+  }
   return `${percentage.toFixed(0)}%`;
 };
 
 export const parseStats = data => {
   const cleanStats = [];
-  console.log('hmmm', data)
   data.forEach(d => {
     const row = d
     row.label = row["Label"]
     row.fips = fipsOrString(d.Code); // Need to add the first column manually
-    delete row["Code"]
-    delete row["Label"]
+    // delete row["Code"]
+    // delete row["Label"]
     cleanStats.push(row);
   });
   return cleanStats;

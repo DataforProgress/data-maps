@@ -15,8 +15,7 @@ const getPosition = e => {
 };
 
 const createTooltipContent = (data, filter, scale) => {
-  console.log(data, filter, scale)
-  let content = `<strong>${getFullLabel(data.legendLabel)}:</strong> `;
+  let content = `<strong>${getFullLabel(data.label || data.legendLabel)}:</strong> `;
   if (scale === QUALITATIVE_SCALE) {
     content += `${formatQualitativeScale(data[filter], "long")}`;
   } else {

@@ -77,7 +77,6 @@ const addStateAndDistrictToggle = (container, dataset, selected) => {
       .append("select")
       .attr("name", "toggle")
       .on("change", () => {
-        console.log(dataset)
         const selected = dataset[toggle.property("value")];
         currentDataset = selected;
         updateClickInstructions(toggle.property("value"));
@@ -181,7 +180,6 @@ const initDataMap = (container) => {
           if (dataset.max) datasets[key].max = floatOrNull(dataset.max);
           if (dataset.min) datasets[key].min = floatOrNull(dataset.min);
         }
-        console.log(datasets, 'asldkfj')
         datasets[key][mapKey] = dataset;
         datasets[key].maps.push(mapKey);
         datasets[key].tabs.push(dataset.tab);

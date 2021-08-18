@@ -20,6 +20,8 @@ export const legendWidth = 320;
 export const legendHeight = 40;
 export const nonFilters = [
   "label",
+  'Label',
+  "Code",
   "fips",
   "state",
   "content",
