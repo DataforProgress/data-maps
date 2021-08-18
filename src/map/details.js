@@ -17,7 +17,7 @@ const getDetailsKeys = data => {
 };
 
 const quantitativeContent = data => {
-  let content = `<h4>${getFullLabel(data.label)}</h4>`;
+  let content = `<h4>${getFullLabel(data.label)}</h4> <a id="details-dismiss">&#10006;</a>`;
   content += "<table><tbody>";
   const keys = getDetailsKeys(data);
   keys.forEach(key => {

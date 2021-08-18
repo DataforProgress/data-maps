@@ -44,6 +44,9 @@ export const addShare = (shareState) => {
       legendSVG.setAttribute("viewBox", "0 0 320 40");
     }
 
+    const xelem = elem.querySelector("#details-dismiss")
+
+    if (xelem) xelem.style.display = 'none'
     html2canvas(elem).then(canvas => {
       mapSVG.removeAttribute("width");
       mapSVG.removeAttribute("height");
@@ -54,6 +57,8 @@ export const addShare = (shareState) => {
         legendSVG.removeAttribute('width');
         legendSVG.setAttribute("viewBox", "0 0 320 40");
       }
+
+      if (xelem) xelem.style.display = 'block'
       parent.removeChild(copy);
     });
   });

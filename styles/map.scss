@@ -361,3 +361,11 @@ span.#{$prefix}legend-label {
 .#{$prefix}zoom-out {
   top: 85px;
 }
+
+#details-dismiss {
+  float: right;
+  position: absolute;
+  top: .75rem;
+  right: 1.5rem;
+  cursor: pointer;
+}

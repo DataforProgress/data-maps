@@ -81,7 +81,7 @@ export const initMap = container => {
   addShare(shareState);
 
   document.addEventListener("click", event => {
-    if (event.target.id === `${prefix}map-svg`) {
+    if (event.target.id === `${prefix}map-svg` || event.target.id === "details-dismiss") {
       svg.selectAll("path").style("opacity", 1);
       removeDetails();
       shareState.feature = null;
