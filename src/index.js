@@ -226,6 +226,23 @@ const initDataMap = (container) => {
 const init = (container) => {
   sheetKey = container ? container.getAttribute("data-spreadsheet-key") : null;
 
+  var url = new URL(window.location);
+  var searchParams = new URLSearchParams(url.search);
+  let querySheetId = searchParams.get('sheet-id')
+
+  // allow user to specify sheet in url params
+  if(querySheetId) {
+    let oldSheetKey = sheetKey
+    sheetKey = querySheetId
+    container.setAttribute("data-spreadsheet-key", querySheetId)
+    setTimeout(() => {
+      let textarea = document.getElementsByTagName('textarea')
+      if(textarea[0]) {
+        textarea[0].innerHTML = textarea[0].innerHTML.replace(oldSheetKey, sheetKey)
+      }
+    }, 100)
+  }
+
   if (!sheetKey) {
     console.error("Cannot init maps without a key - set the data-spreadsheet-key attribute");
     return;
