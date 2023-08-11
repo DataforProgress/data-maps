@@ -154,7 +154,11 @@ const initDataMap = (container) => {
     data.forEach(dataset => {
       try {
         const key = dataset.title;
-        const mapKey = dataset.dataset.replace(/\s/g, "-").toLowerCase();
+        let mapKey = dataset.dataset.replace(/\s/g, "-").toLowerCase();
+        // const mapKeySuffix = dataset.suffix.repl.replace(/\s/g, "-").toLowerCase();
+        // if (mapKeySuffix) {
+        //   mapKey = mapKey + `-${mapKeySuffix}`
+        // }
 
         if (!loadedMaps[mapKey]) {
           fetchMap(mapKey);
