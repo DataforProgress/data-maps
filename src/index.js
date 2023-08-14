@@ -22,19 +22,20 @@ const mapKeys = {};
 const fetchMap = map => json(buildMapURL(map)).then(geojson => (maps[map] = geojson));
 
 const build = (tab, options, attempts) => {
+  console.log('hi', tab, options, attempts)
   options = options || {};
   options.mapKey = mapKeys[tab];
   options.sheetKey = sheetKey;
   toggleLoading(true);
   if (!sheets[tab])
     return fetch(buildSheetsURL(sheetNames[tab - 1].properties.title, sheetKey))
-    .then(resp => resp.json())
-    // .then(resp => csv(resp.values.join("\n")))
-    .then(response => {
-      let data = parseArr(response)
-      sheets[tab] = data;
-      build(tab, options);
-    });
+      .then(resp => resp.json())
+      // .then(resp => csv(resp.values.join("\n")))
+      .then(response => {
+        let data = parseArr(response)
+        sheets[tab] = data;
+        build(tab, options);
+      });
 
   const map = maps[mapKeys[tab]];
 
@@ -129,8 +130,6 @@ const addMapSelector = (container, data, firstKey) => {
 
 
 const initDataMap = (container) => {
-
-
   initDom(container);
   initMap(container);
   initTable(container);
@@ -147,83 +146,83 @@ const initDataMap = (container) => {
 
   // Get the Settings tab which lists all the datasets (other tabs) we'll later get
   fetch(buildSheetsURL(sheetNames[0].properties.title, sheetKey))
-  .then(resp => resp.json())
-  // .then(resp => csv(resp.values.join("\n")))
-  .then(response => {
-    let data = parseArr(response)
-    data.forEach(dataset => {
-      try {
-        const key = dataset.title;
-        let mapKey = dataset.dataset.replace(/\s/g, "-").toLowerCase();
-        // const mapKeySuffix = dataset.suffix.repl.replace(/\s/g, "-").toLowerCase();
-        // if (mapKeySuffix) {
-        //   mapKey = mapKey + `-${mapKeySuffix}`
-        // }
+    .then(resp => resp.json())
+    // .then(resp => csv(resp.values.join("\n")))
+    .then(response => {
+      let data = parseArr(response);
+      data.forEach(dataset => {
+        try {
+          const key = dataset.title;
+          let mapKey = dataset.dataset.replace(/\s/g, "-").toLowerCase();
+          // const mapKeySuffix = dataset.suffix.repl.replace(/\s/g, "-").toLowerCase();
+          // if (mapKeySuffix) {
+          //   mapKey = mapKey + `-${mapKeySuffix}`
+          // }
 
-        if (!loadedMaps[mapKey]) {
-          fetchMap(mapKey);
-          loadedMaps[mapKey] = true;
+          if (!loadedMaps[mapKey]) {
+            fetchMap(mapKey);
+            loadedMaps[mapKey] = true;
+          }
+
+          dataset.scaleType = dataset.scale || DEFAULT_SCALE;
+          dataset.buckets = Number(dataset.buckets) || DEFAULT_BUCKETS;
+          dataset.issuekey = key
+
+          if (!Object.prototype.hasOwnProperty.call(datasets, key)) {
+            datasets[key] = {};
+            datasets[key].label = dataset.label || dataset.issuelabel;
+            datasets[key].title = dataset.title || `Support for ${datasets[key].label}`;
+            datasets[key].defaultTab = dataset.tab;
+            datasets[key].scaleType = dataset.scaleType;
+            datasets[key].legendLabel = dataset.legendlabel || "Issue support";
+            datasets[key].defaultMap = mapKey;
+            datasets[key].issuekey = key;
+            datasets[key].maps = [];
+            datasets[key].tabs = [];
+            datasets[key].buckets = Number(dataset.buckets) || DEFAULT_BUCKETS;
+            if (dataset.max) datasets[key].max = floatOrNull(dataset.max);
+            if (dataset.min) datasets[key].min = floatOrNull(dataset.min);
+          }
+          datasets[key][mapKey] = dataset;
+          datasets[key].maps.push(mapKey);
+          datasets[key].tabs.push(dataset.tab);
+          mapKeys[dataset.tab] = mapKey;
+        } catch (error) {
+          console.error(
+            `Could not import settings row ${dataset.title} ${dataset.content}, error:`
+          );
+          console.error(error);
         }
+      });
 
-        dataset.scaleType = dataset.scale || DEFAULT_SCALE;
-        dataset.buckets = Number(dataset.buckets) || DEFAULT_BUCKETS;
-        dataset.issuekey = key
+      const {
+        datasetKeys,
+        firstKey,
+        firstDataset,
+        firstTab,
+        firstMap,
+        firstFilter,
+        firstFeature
+      } = getMapConfig(datasets, {
+        startMap,
+        startKey: container.getAttribute("data-start-key"),
+        startFilter: container.getAttribute("data-start-filter"),
+        startFeature: container.getAttribute("data-start-feature")
+      });
 
-        if (!Object.prototype.hasOwnProperty.call(datasets, key)) {
-          datasets[key] = {};
-          datasets[key].label = dataset.label || dataset.issuelabel;
-          datasets[key].title = dataset.title || `Support for ${datasets[key].label}`;
-          datasets[key].defaultTab = dataset.tab;
-          datasets[key].scaleType = dataset.scaleType;
-          datasets[key].legendLabel = dataset.legendlabel || "Issue support";
-          datasets[key].defaultMap = mapKey;
-          datasets[key].issuekey = key;
-          datasets[key].maps = [];
-          datasets[key].tabs = [];
-          datasets[key].buckets = Number(dataset.buckets) || DEFAULT_BUCKETS;
-          if (dataset.max) datasets[key].max = floatOrNull(dataset.max);
-          if (dataset.min) datasets[key].min = floatOrNull(dataset.min);
-        }
-        datasets[key][mapKey] = dataset;
-        datasets[key].maps.push(mapKey);
-        datasets[key].tabs.push(dataset.tab);
-        mapKeys[dataset.tab] = mapKey;
-      } catch (error) {
-        console.error(
-          `Could not import settings row ${dataset.title} ${dataset.content}, error:`
-        );
-        console.error(error);
+      currentDataset = firstDataset;
+
+      if (datasetKeys.length > 1) {
+        addMapSelector(container, datasetKeys, firstKey);
       }
+      if (Object.values(mapKeys).length > 1) {
+        addStateAndDistrictToggle(container, firstDataset, firstMap);
+      }
+
+      build(firstTab, { firstFilter, firstFeature });
+      updateClickInstructions(firstMap);
+      getContent(currentDataset.issuekey, sheetKey, sheetNames);
     });
-
-    const {
-      datasetKeys,
-      firstKey,
-      firstDataset,
-      firstTab,
-      firstMap,
-      firstFilter,
-      firstFeature
-    } = getMapConfig(datasets, {
-      startMap,
-      startKey: container.getAttribute("data-start-key"),
-      startFilter: container.getAttribute("data-start-filter"),
-      startFeature: container.getAttribute("data-start-feature")
-    });
-
-    currentDataset = firstDataset;
-
-    if (datasetKeys.length > 1) {
-      addMapSelector(container, datasetKeys, firstKey);
-    }
-    if (Object.values(mapKeys).length > 1) {
-      addStateAndDistrictToggle(container, firstDataset, firstMap);
-    }
-
-    build(firstTab, { firstFilter, firstFeature });
-    updateClickInstructions(firstMap);
-    getContent(currentDataset.issuekey, sheetKey, sheetNames);
-  });
 };
 
 
@@ -235,13 +234,13 @@ const init = (container) => {
   let querySheetId = searchParams.get('sheet-id')
 
   // allow user to specify sheet in url params
-  if(querySheetId) {
+  if (querySheetId) {
     let oldSheetKey = sheetKey
     sheetKey = querySheetId
     container.setAttribute("data-spreadsheet-key", querySheetId)
     setTimeout(() => {
       let textarea = document.getElementsByTagName('textarea')
-      if(textarea[0]) {
+      if (textarea[0]) {
         textarea[0].innerHTML = textarea[0].innerHTML.replace(oldSheetKey, sheetKey)
       }
     }, 100)
@@ -251,7 +250,7 @@ const init = (container) => {
     console.error("Cannot init maps without a key - set the data-spreadsheet-key attribute");
     return;
   }
-  
+
   getSheetNames(sheetKey).then(results => {
     sheetNames = results;
     initDataMap(container)
