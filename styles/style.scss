@@ -5,13 +5,12 @@
 @import "loader";
 @import "share";
 
-body {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: 20px;
-}
 
 .data-progress-maps {
+
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1040px;
   color: #333;
   margin: 0;
 }
