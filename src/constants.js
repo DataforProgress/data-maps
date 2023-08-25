@@ -43,6 +43,8 @@ export const DIVERGENT_SCALE = "red-to-blue";
 export const INVERTED_SCALE = "blue-to-red";
 export const DYNAMIC_SCALE = "dynamic";
 export const INVERTED_DYNAMIC_SCALE = "dynamic-inverted";
+export const RED_GREEN = "red-to-green";
+export const GREEN_RED = "green-to-red";
 export const DEFAULT_SCALE = DIVERGENT_SCALE;
 export const DEFAULT_BUCKETS = 7;
 

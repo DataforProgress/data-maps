@@ -22,7 +22,6 @@ const mapKeys = {};
 const fetchMap = map => json(buildMapURL(map)).then(geojson => (maps[map] = geojson));
 
 const build = (tab, options, attempts) => {
-  console.log('hi', tab, options, attempts)
   options = options || {};
   options.mapKey = mapKeys[tab];
   options.sheetKey = sheetKey;
@@ -41,6 +40,7 @@ const build = (tab, options, attempts) => {
 
   if (!map) {
     const attempt = attempts || 0;
+
     if (attempt < 2) {
       return setTimeout(() => build(tab, options, attempt + 1), 500);
     }

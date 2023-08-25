@@ -9,7 +9,9 @@ import {
   INVERTED_RED_SCALE,
   INVERTED_BLUE_SCALE,
   INVERTED_DYNAMIC_SCALE,
-  DIVERGENT_SCALE
+  DIVERGENT_SCALE,
+  RED_GREEN,
+  GREEN_RED
 } from "../constants";
 
 export const getDomain = (data, setMin, setMax) => {
@@ -102,19 +104,25 @@ export const getMapScale = ({ scaleType, buckets, setMin, setMax }, data) => {
     return value => qualMapScale[value];
   }
   if (colorScheme === INVERTED_SCALE) {
-    return d3.scaleQuantize(domain, d3.schemeRdBu[colorSchemeIndex].reverse());
+    return d3.scaleQuantize(domain, Array.from(d3.schemeRdBu[colorSchemeIndex]).reverse());
   }
   if (colorScheme === BLUE_SCALE) {
     return d3.scaleQuantize(domain, d3.schemeBlues[colorSchemeIndex]);
+  }
+  if (colorScheme === RED_GREEN) {
+    return d3.scaleQuantize(domain, d3.schemeRdYlGn[colorSchemeIndex]);
+  }
+  if (colorScheme === GREEN_RED) {
+    return d3.scaleQuantize(domain, Array.from(d3.schemeRdYlGn[colorSchemeIndex]).reverse());
   }
   if (colorScheme === RED_SCALE) {
     return d3.scaleQuantize(domain, d3.schemeReds[colorSchemeIndex]);
   }
   if (colorScheme === INVERTED_RED_SCALE) {
-    return d3.scaleQuantize(domain, d3.schemeReds[colorSchemeIndex].reverse());
+    return d3.scaleQuantize(domain, Array.from(d3.schemeReds[colorSchemeIndex]).reverse());
   }
   if (colorScheme === INVERTED_BLUE_SCALE) {
-    return d3.scaleQuantize(domain, d3.schemeBlues[colorSchemeIndex].reverse());
+    return d3.scaleQuantize(domain, Array.from(d3.schemeBlues[colorSchemeIndex]).reverse());
   }
 
   return d3.scaleQuantize(domain, d3.schemeRdBu[colorSchemeIndex]);
