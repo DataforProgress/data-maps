@@ -249,6 +249,8 @@ export const drawMap = (stats, map, dataSetConfig, options) => {
     )
   );
 
+  console.log(dataSetConfig)
+
   addFilters(currentGeography, filters, initialFilter, dataSetConfig);
   updatePaths(currentGeography, initialFilter, dataSetConfig);
   createTable(cleanStats);

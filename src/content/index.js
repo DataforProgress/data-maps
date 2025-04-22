@@ -19,7 +19,7 @@ export const toggleLoading = (isLoading, elem = vis) => {
 
 export const showContent = issueKey => {
   selectAll(`.${prefix}content section`).style("display", "none");
-  select(`[data-issue=${issueKey}]`).style("display", "block");
+  select(`[data-issue="${issueKey}"]`).style("display", "block");
 };
 
 export const getContent = (currentIssueKey, sheetsID, sheetNames) => {

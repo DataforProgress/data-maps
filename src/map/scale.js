@@ -19,7 +19,7 @@ export const getDomain = (data, setMin, setMax) => {
   const min = Math.min.apply(null, data);
 
   const domain = [];
-  if (setMin) {
+  if (setMin || min === 0) {
     domain.push(setMin);
   } else {
     domain.push(
@@ -83,7 +83,7 @@ export const getDynamicColorScheme = (domain, scaleType) => {
   return DIVERGENT_SCALE;
 };
 
-export const getMapScale = ({ scaleType, buckets, setMin, setMax }, data) => {
+export const getMapScale = ({ scaleType, buckets, min: setMin, max: setMax }, data) => {
   const colorSchemeIndex = buckets; // Account for 0-indexing
   let domain = [];
   let colorScheme;
