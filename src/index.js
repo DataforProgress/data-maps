@@ -125,7 +125,7 @@ const addMapSelector = (container, data, firstKey) => {
     .attr("value", d => d)
     .text(d => datasets[d].label);
 
-  mapSelector.select(`option[value=${firstKey}]`).attr("selected", true);
+  mapSelector.select(`option[value="${firstKey}]"`).attr("selected", true);
 };
 
 
