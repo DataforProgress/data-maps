@@ -174,7 +174,7 @@ const initDataMap = (container) => {
             datasets[key].title = dataset.title || `Support for ${datasets[key].label}`;
             datasets[key].defaultTab = dataset.tab;
             datasets[key].scaleType = dataset.scaleType;
-            datasets[key].legendLabel = dataset.legendlabel || "Issue support";
+            datasets[key].legendLabel = dataset.legendLabel || "Issue support";
             datasets[key].defaultMap = mapKey;
             datasets[key].issuekey = key;
             datasets[key].maps = [];
