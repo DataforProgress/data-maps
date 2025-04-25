@@ -84,13 +84,15 @@ const addStateAndDistrictToggle = (container, dataset, selected) => {
         build(selected.tab);
       });
 
+    // some datsets specify a year or session of congress, such as house-118. Let's simply show 'house'
+    const splitDatasetName = x => x.split("-")[0];
     toggle
       .selectAll("option")
       .data(dataset.maps)
       .enter()
       .append("option")
       .attr("value", d => d.toLowerCase())
-      .text(d => dataset[d].dataset);
+      .text(d => splitDatasetName(dataset[d].dataset));
 
     if (selected) toggle.property("value", selected);
   }
