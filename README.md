@@ -70,8 +70,8 @@ The sheet can have an optional `content` column that will be displayed in the de
 
 
 ## Creating TopoJSON Files
-
-Visit [mapshaper](https://mapshaper.org/) to convert shapefiles or geojson to topojson. Try and compress further using [toposimplify](https://github.com/topojson/topojson-simplify) if possible.
+Visit [simplemaps](https://simplemaps.com/data/congress) to find the latest congressiona district shapefiles. 
+Visit [mapshaper](https://mapshaper.org/) to convert shapefiles or geojson to topojson. Try and compress further using [toposimplify](https://github.com/topojson/topojson-simplify) if possible. Make sure to process the standard congress shapefile and not the albers projection. We do projection mapping on the frontend to its not necessary to do it as a processing step. 
 
 Each TopoJSON files must have the following characteristics:
 
