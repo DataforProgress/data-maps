@@ -77,6 +77,7 @@ Each TopoJSON files must have the following characteristics:
 
  * The shapes which are to be mapped must be under in the `features` key under `objects`
  * Each geometry needs to have an `id` property which will be joined to the `code` column in the spreadsheet.
+ * run the process-topojson.js script to add necessary fields
  * The top level `config` can be added added to to effect the projection, rotation, scale, and zoomScalar when the features are loaded.
 
 ```json
