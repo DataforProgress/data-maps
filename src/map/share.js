@@ -17,7 +17,7 @@ export const addShare = (shareState) => {
     }
 
     // html2canvass doesn't support dynamic images used in qualitative scale
-    if( shareState.scaleType === QUALITATIVE_SCALE ) {
+    if (shareState.scaleType === QUALITATIVE_SCALE) {
       return toggleShare(true, false, shareState)
     }
 
@@ -39,7 +39,7 @@ export const addShare = (shareState) => {
     mapSVG.setAttribute("height", 600);
 
     const legendSVG = elem.querySelector(`.${prefix}legend svg`);
-    if( legendSVG ) {
+    if (legendSVG) {
       legendSVG.setAttribute("width", legendSVG.getBBox().width * 10);
       legendSVG.setAttribute("viewBox", "0 0 320 40");
     }
@@ -47,13 +47,13 @@ export const addShare = (shareState) => {
     const xelem = elem.querySelector("#details-dismiss")
 
     if (xelem) xelem.style.display = 'none'
-    html2canvas(elem).then(canvas => {
+    html2canvas(elem, {scale: 6}).then(canvas => {
       mapSVG.removeAttribute("width");
       mapSVG.removeAttribute("height");
       toggleLoading(false);
       toggleShare(true, canvas.toDataURL("image/png"), shareState);
       elem.classList.remove("generating-screenshot");
-      if( legendSVG ) {
+      if (legendSVG) {
         legendSVG.removeAttribute('width');
         legendSVG.setAttribute("viewBox", "0 0 320 40");
       }
